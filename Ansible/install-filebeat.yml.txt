@@ -1,0 +1,25 @@
+---
+- name: Installing Filebeat
+  hosts: webservers
+  become: yes
+  tasks:
+
+  - name: Downloading The Filebeat DEB
+    command: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.6.1-amd64.deb
+ 
+  - name: Extracting & Installing Firebeat
+    command: dpkg -i filebeat-7.6.1-amd64.deb
+
+  - name: Dropping filebeat.yml Config
+    copy:
+      src: ./filebeat.yml
+      dest: /etc/filebeat/
+
+  - name: Enable System Module
+    command: sudo filebeat modules enable system
+
+  - name: Setting Up Filebeat
+    command: sudo filebeat setup
+
+  - name: Starting Filebeat Service
+    command: sudo service filebeat start
